@@ -1,0 +1,30 @@
+{
+    "name": "laravel-enso/risco",
+    "description": "A RisCo API client",
+    "type": "project",
+    "require": {
+        "laravel-enso/core": "^1.1",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mihai Ocneanu",
+            "email": "mihai.ocneanu@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "LaravelEnso\\Risco\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelEnso\\Risco\\RiscoServiceProvider"
+            ],
+            "aliases": {}
+        }
+    }
+}
