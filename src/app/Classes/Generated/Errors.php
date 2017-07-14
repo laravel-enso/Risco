@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class Errors
 {
-
     /**
      * @var string
      */
@@ -30,7 +29,4 @@ class Errors
     {
         return $this->ErrorDetails;
     }
-
-
 }
-

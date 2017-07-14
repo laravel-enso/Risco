@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class DataType
 {
-
     /**
      * @var int
      */
@@ -43,7 +42,4 @@ class DataType
     {
         return $this->STS;
     }
-
-
 }
-

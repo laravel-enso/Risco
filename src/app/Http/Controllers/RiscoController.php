@@ -107,7 +107,7 @@ class RiscoController extends Controller
 
         $clientFactory = new ClientFactory(RiscoClient::class);
         $soapOptions = [
-            'cache_wsdl' => WSDL_CACHE_NONE,
+            'cache_wsdl'    => WSDL_CACHE_NONE,
             'trace'         => 1,
             'exceptions'    => 1,
         ];
@@ -123,16 +123,17 @@ class RiscoController extends Controller
 
         $response = $client->getFinancialInfo($request);
         $result = $response->getResult();
-        Log::info((array)$result);
+        Log::info((array) $result);
 
         return (array) $result;
 
         $xmlString = $result->getFinancial_Res()->getFIN_Res()->getRawData();
         $xmlObject = simplexml_load_string($xmlString);
         $json = json_encode($xmlObject);
-        $array = json_decode($json,TRUE);
+        $array = json_decode($json, true);
 
         Log::info($array);
+
         return (array) $array;
     }
 
@@ -293,7 +294,5 @@ class RiscoController extends Controller
             new ClassMap('IID_Res', \LaravelEnso\Risco\app\Classes\Generated\IID_Res::class),
             new ClassMap('STS_Res', \LaravelEnso\Risco\app\Classes\Generated\STS_Res::class),
         ]);
-
-
     }
 }

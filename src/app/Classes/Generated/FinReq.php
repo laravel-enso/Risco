@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class FinReq
 {
-
     /**
      * @var HeaderReq
      */
@@ -30,7 +29,4 @@ class FinReq
     {
         return $this->FinServiceReq;
     }
-
-
 }
-

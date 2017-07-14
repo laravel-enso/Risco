@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class HeaderRes
 {
-
     /**
      * @var string
      */
@@ -95,7 +94,4 @@ class HeaderRes
     {
         return $this->user;
     }
-
-
 }
-

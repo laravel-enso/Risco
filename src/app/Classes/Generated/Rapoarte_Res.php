@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class Rapoarte_Res
 {
-
     /**
      * @var JUST_Res
      */
@@ -134,7 +133,4 @@ class Rapoarte_Res
     {
         return $this->PIM_Res;
     }
-
-
 }
-

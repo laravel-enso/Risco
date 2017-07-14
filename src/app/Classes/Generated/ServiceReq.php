@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class ServiceReq
 {
-
     /**
      * @var string
      */
@@ -43,7 +42,4 @@ class ServiceReq
     {
         return $this->ContentType;
     }
-
-
 }
-

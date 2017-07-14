@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class FinServiceReq
 {
-
     /**
      * @var string
      */
@@ -30,7 +29,4 @@ class FinServiceReq
     {
         return $this->DataType;
     }
-
-
 }
-

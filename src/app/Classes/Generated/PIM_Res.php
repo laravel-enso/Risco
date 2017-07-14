@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class PIM_Res
 {
-
     /**
      * @var anyType
      */
@@ -30,7 +29,4 @@ class PIM_Res
     {
         return $this->Error;
     }
-
-
 }
-

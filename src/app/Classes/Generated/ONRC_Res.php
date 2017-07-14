@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class ONRC_Res
 {
-
     /**
      * @var anyType
      */
@@ -30,7 +29,4 @@ class ONRC_Res
     {
         return $this->Error;
     }
-
-
 }
-

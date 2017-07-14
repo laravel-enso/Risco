@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class Reports
 {
-
     /**
      * @var int
      */
@@ -134,7 +133,4 @@ class Reports
     {
         return $this->PIM;
     }
-
-
 }
-

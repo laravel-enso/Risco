@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class ACT_Res
 {
-
     /**
      * @var anyType
      */
@@ -30,7 +29,4 @@ class ACT_Res
     {
         return $this->Error;
     }
-
-
 }
-

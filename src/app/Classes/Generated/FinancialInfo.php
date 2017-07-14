@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class FinancialInfo
 {
-
     /**
      * @var Financial_Res
      */
@@ -30,7 +29,4 @@ class FinancialInfo
     {
         return $this->Errors;
     }
-
-
 }
-

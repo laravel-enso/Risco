@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class RAT_Res
 {
-
     /**
      * @var anyType
      */
@@ -30,7 +29,4 @@ class RAT_Res
     {
         return $this->Error;
     }
-
-
 }
-

@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class HeaderReq
 {
-
     /**
      * @var string
      */
@@ -108,7 +107,4 @@ class HeaderReq
     {
         return $this->password;
     }
-
-
 }
-

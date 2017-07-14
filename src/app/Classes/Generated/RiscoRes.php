@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Classes\Generated;
 
 class RiscoRes
 {
-
     /**
      * @var HeaderRes
      */
@@ -56,7 +55,4 @@ class RiscoRes
     {
         return $this->Errors;
     }
-
-
 }
-

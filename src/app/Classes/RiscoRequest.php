@@ -8,9 +8,6 @@
 
 namespace LaravelEnso\Risco\app\Classes;
 
-use Illuminate\Http\Request;
-use LaravelEnso\Core\app\Exceptions\EnsoException;
-use LaravelEnso\Risco\app\Models\SubscribedApp;
 use Phpro\SoapClient\Type\RequestInterface;
 
 class RiscoRequest implements RequestInterface
@@ -19,7 +16,6 @@ class RiscoRequest implements RequestInterface
 
     public function __construct($params)
     {
-
         $this->FinReq = $params;
     }
 }
