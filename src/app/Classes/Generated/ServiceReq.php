@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class ServiceReq
+use JsonSerializable;
+
+class ServiceReq implements JsonSerializable
 {
 
     /**
@@ -19,6 +21,18 @@ class ServiceReq
      * @var string
      */
     private $ContentType = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'CUI' => $this->CUI,
+            'Reports' => $this->Reports,
+            'ContentType' => $this->ContentType,
+        ];
+    }
 
     /**
      * @return string

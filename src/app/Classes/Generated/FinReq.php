@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class FinReq
+use JsonSerializable;
+
+class FinReq implements JsonSerializable
 {
 
     /**
@@ -14,6 +16,17 @@ class FinReq
      * @var FinServiceReq
      */
     private $FinServiceReq = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'HeaderReq' => $this->HeaderReq,
+            'FinServiceReq' => $this->FinServiceReq,
+        ];
+    }
 
     /**
      * @return HeaderReq

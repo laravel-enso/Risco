@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class ACT_Res
+use JsonSerializable;
+
+class ACT_Res implements JsonSerializable
 {
 
     /**
@@ -14,6 +16,17 @@ class ACT_Res
      * @var string
      */
     private $Error = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'RawData' => $this->RawData,
+            'Error' => $this->Error,
+        ];
+    }
 
     /**
      * @return anyType

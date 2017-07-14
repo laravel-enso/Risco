@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class RAT_Res
+use JsonSerializable;
+
+class RAT_Res implements JsonSerializable
 {
 
     /**
@@ -14,6 +16,17 @@ class RAT_Res
      * @var string
      */
     private $Error = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'RawData' => $this->RawData,
+            'Error' => $this->Error,
+        ];
+    }
 
     /**
      * @return anyType

@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class HeaderRes
+use JsonSerializable;
+
+class HeaderRes implements JsonSerializable
 {
 
     /**
@@ -39,6 +41,22 @@ class HeaderRes
      * @var string
      */
     private $user = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'channel' => $this->channel,
+            'extref' => $this->extref,
+            'intref' => $this->intref,
+            'daterequest' => $this->daterequest,
+            'dateresponse' => $this->dateresponse,
+            'psign' => $this->psign,
+            'user' => $this->user,
+        ];
+    }
 
     /**
      * @return string

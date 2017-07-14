@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class IID_Res
+use JsonSerializable;
+
+class IID_Res implements JsonSerializable
 {
 
     /**
@@ -14,6 +16,17 @@ class IID_Res
      * @var anyType
      */
     private $Error = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'RawData' => $this->RawData,
+            'Error' => $this->Error,
+        ];
+    }
 
     /**
      * @return anyType

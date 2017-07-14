@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class PIM_Res
+use JsonSerializable;
+
+class PIM_Res implements JsonSerializable
 {
 
     /**
@@ -14,6 +16,17 @@ class PIM_Res
      * @var string
      */
     private $Error = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'RawData' => $this->RawData,
+            'Error' => $this->Error,
+        ];
+    }
 
     /**
      * @return anyType

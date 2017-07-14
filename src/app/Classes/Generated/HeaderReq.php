@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class HeaderReq
+use JsonSerializable;
+
+class HeaderReq implements JsonSerializable
 {
 
     /**
@@ -44,6 +46,23 @@ class HeaderReq
      * @var string
      */
     private $password = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'channel' => $this->channel,
+            'extref' => $this->extref,
+            'intref' => $this->intref,
+            'daterequest' => $this->daterequest,
+            'dateresponse' => $this->dateresponse,
+            'psign' => $this->psign,
+            'user' => $this->user,
+            'password' => $this->password,
+        ];
+    }
 
     /**
      * @return string

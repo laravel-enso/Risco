@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class Financial_Res
+use JsonSerializable;
+
+class Financial_Res implements JsonSerializable
 {
 
     /**
@@ -19,6 +21,18 @@ class Financial_Res
      * @var STS_Res
      */
     private $STS_Res = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'FIN_Res' => $this->FIN_Res,
+            'IID_Res' => $this->IID_Res,
+            'STS_Res' => $this->STS_Res,
+        ];
+    }
 
     /**
      * @return FIN_Res

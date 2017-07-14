@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class Errors
+use JsonSerializable;
+
+class Errors implements JsonSerializable
 {
 
     /**
@@ -14,6 +16,17 @@ class Errors
      * @var string
      */
     private $ErrorDetails = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'ErrorCode' => $this->ErrorCode,
+            'ErrorDetails' => $this->ErrorDetails,
+        ];
+    }
 
     /**
      * @return string

@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class FIN_Res
+use JsonSerializable;
+
+class FIN_Res implements JsonSerializable
 {
 
     /**
@@ -16,11 +18,27 @@ class FIN_Res
     private $Error = null;
 
     /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'RawData' => $this->RawData,
+            'Error' => $this->Error,
+        ];
+    }
+
+    /**
      * @return string
      */
     public function getRawData()
     {
         return $this->RawData;
+    }
+
+    public function setRawData($rawData)
+    {
+        $this->RawData = $rawData;
     }
 
     /**

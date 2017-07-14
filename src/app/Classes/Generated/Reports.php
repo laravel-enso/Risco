@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class Reports
+use JsonSerializable;
+
+class Reports implements JsonSerializable
 {
 
     /**
@@ -54,6 +56,25 @@ class Reports
      * @var int
      */
     private $PIM = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'JUST' => $this->JUST,
+            'RAT' => $this->RAT,
+            'RES' => $this->RES,
+            'LCO' => $this->LCO,
+            'ACT' => $this->ACT,
+            'ISACT' => $this->ISACT,
+            'BI' => $this->BI,
+            'CIP' => $this->CIP,
+            'ONRC' => $this->ONRC,
+            'PIM' => $this->PIM,
+        ];
+    }
 
     /**
      * @return int

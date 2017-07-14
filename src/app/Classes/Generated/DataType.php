@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class DataType
+use JsonSerializable;
+
+class DataType implements JsonSerializable
 {
 
     /**
@@ -19,6 +21,18 @@ class DataType
      * @var int
      */
     private $STS = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'FIN' => $this->FIN,
+            'IID' => $this->IID,
+            'STS' => $this->STS,
+        ];
+    }
 
     /**
      * @return int

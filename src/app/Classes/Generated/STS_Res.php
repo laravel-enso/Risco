@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class STS_Res
+use JsonSerializable;
+
+class STS_Res implements JsonSerializable
 {
 
     /**
@@ -14,6 +16,17 @@ class STS_Res
      * @var anyType
      */
     private $Error = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'RawData' => $this->RawData,
+            'Error' => $this->Error,
+        ];
+    }
 
     /**
      * @return anyType

@@ -54,9 +54,9 @@ class RiscoController extends Controller
         Log::debug('PSIGN CALCULAT DE LA CLIENT: '.$HeaderReq['psign']);
 
         $DataType = [
-            'FIN' => 0,
-            'IID' => 1,
-            'STS' => 1,
+            'FIN' => 1,
+            'IID' => 0,
+            'STS' => 0,
         ];
 
         $FinServiceReq = [
@@ -71,35 +71,7 @@ class RiscoController extends Controller
 
         $WSDL = 'http://dev.risco.ro/RiscoWs/RapoarteRisco.php?wsdl';
 
-        //meng-tian
-        /* $factory = new Factory();
-         $client = $factory->create(new Client(), $WSDL);
-         $result = $client->call('getFinancialInfo', $FinReq);
-         return $result;*/
 
-        //basic
-        /*try {
-            $objClient = new SoapClient($WSDL, [
-                'trace'         => 1,
-                'exceptions'    => 1,
-            ]);
-            //$objClient->__setSoapHeaders($HeaderReq);
-            $response = $objClient->__soapCall('getFinancialInfo', ['FinReq' => $FinReq]);
-
-            \Log::debug((array) $response);
-            return (array) $response;
-
-
-        } catch (\Exception $e) {
-            \Log::debug('Request: ');
-            \Log::debug($objClient->__getLastRequest());
-            \Log::debug('Response: ');
-            \Log::debug($objClient->__getLastResponse());
-            \Log::info($e->getMessage());
-            \Log::debug($e->getTraceAsString());
-
-            return $e->getMessage();
-        }*/
 
         //phpro
         $request = new MultiArgumentRequest(['FinReq' => $FinReq]);
@@ -115,7 +87,7 @@ class RiscoController extends Controller
         $clientBuilder = new ClientBuilder($clientFactory, $WSDL, $soapOptions);
         //$clientBuilder->withLogger(new Logger());
         //$clientBuilder->withEventDispatcher(new EventDispatcher());
-        $clientBuilder->withClassMaps($this->getClassMap());
+        $clientBuilder->withClassMaps($this->getClassMaps());
         //$clientBuilder->addTypeConverter(new DateTimeTypeConverter());
         $guzzleClient = new Client();
         $clientBuilder->withHandler(GuzzleHandle::createForClient($guzzleClient));
@@ -123,17 +95,12 @@ class RiscoController extends Controller
 
         $response = $client->getFinancialInfo($request);
         $result = $response->getResult();
-        Log::info((array)$result);
 
-        return (array) $result;
+        $this->processFin_ResRawData($result);
 
-        $xmlString = $result->getFinancial_Res()->getFIN_Res()->getRawData();
-        $xmlObject = simplexml_load_string($xmlString);
-        $json = json_encode($xmlObject);
-        $array = json_decode($json,TRUE);
 
-        Log::info($array);
-        return (array) $array;
+        Log::info($result);
+        return $result;
     }
 
     public function destroy(SubscribedApp $subscribedApp)
@@ -263,7 +230,7 @@ class RiscoController extends Controller
         return $tokenResponseData;
     }
 
-    private function getClassMap()
+    private function getClassMaps()
     {
         return new ClassMapCollection([
             new ClassMap('RiscoReq', \LaravelEnso\Risco\app\Classes\Generated\RiscoReq::class),
@@ -295,5 +262,20 @@ class RiscoController extends Controller
         ]);
 
 
+    }
+
+    private function processFin_ResRawData(&$result)
+    {
+
+        if(!$result->getFinancial_Res()->getFIN_Res()) {
+            return;
+        }
+
+        $xmlString = $result->getFinancial_Res()->getFIN_Res()->getRawData();
+        $xmlObject = simplexml_load_string($xmlString);
+        $json = json_encode($xmlObject);
+        $array = json_decode($json,TRUE);
+
+        $result->getFinancial_Res()->getFIN_Res()->setRawData($array);
     }
 }

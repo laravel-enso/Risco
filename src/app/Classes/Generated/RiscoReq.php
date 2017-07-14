@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Risco\app\Classes\Generated;
 
-class RiscoReq
+use JsonSerializable;
+
+class RiscoReq implements JsonSerializable
 {
 
     /**
@@ -14,6 +16,17 @@ class RiscoReq
      * @var ServiceReq
      */
     private $ServiceReq = null;
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'HeaderReq' => $this->HeaderReq,
+            'ServiceReq' => $this->ServiceReq,
+        ];
+    }
 
     /**
      * @return HeaderReq
