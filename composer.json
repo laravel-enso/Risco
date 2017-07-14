@@ -26,5 +26,8 @@
             ],
             "aliases": {}
         }
+    },
+    "require-dev": {
+        "zendframework/zend-code": "^3.0.4"
     }
 }

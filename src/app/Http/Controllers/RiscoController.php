@@ -13,6 +13,7 @@ use LaravelEnso\Risco\app\Classes\ApiRequestHub;
 use LaravelEnso\Risco\app\Classes\PreferencesStructureBuilder;
 use LaravelEnso\Risco\app\Classes\ResponseDataWrapper;
 use LaravelEnso\Risco\app\Classes\RiscoClient;
+use LaravelEnso\Risco\app\Classes\RiscoRequest;
 use LaravelEnso\Risco\app\Classes\TokenRequestHub;
 use LaravelEnso\Risco\app\Enums\DataTypesEnum;
 use LaravelEnso\Risco\app\Enums\SubscribedAppTypesEnum;
@@ -21,6 +22,9 @@ use LaravelEnso\Risco\app\Models\SubscribedApp;
 use Meng\AsyncSoap\Guzzle\Factory;
 use Phpro\SoapClient\ClientBuilder;
 use Phpro\SoapClient\ClientFactory;
+use Phpro\SoapClient\Soap\ClassMap\ClassMap;
+use Phpro\SoapClient\Soap\ClassMap\ClassMapCollection;
+use Phpro\SoapClient\Soap\Handler\GuzzleHandle;
 use Phpro\SoapClient\Soap\TypeConverter\DateTimeTypeConverter;
 use Phpro\SoapClient\Type\MultiArgumentRequest;
 use SoapClient;
@@ -50,13 +54,13 @@ class RiscoController extends Controller
         Log::debug('PSIGN CALCULAT DE LA CLIENT: '.$HeaderReq['psign']);
 
         $DataType = [
-            'FIN' => 1,
+            'FIN' => 0,
             'IID' => 1,
             'STS' => 1,
         ];
 
         $FinServiceReq = [
-            'CUI'      => '22197648',
+            'CUI'      => '22197648', //15565607
             'DataType' => $DataType,
         ];
 
@@ -74,7 +78,7 @@ class RiscoController extends Controller
          return $result;*/
 
         //basic
-        try {
+        /*try {
             $objClient = new SoapClient($WSDL, [
                 'trace'         => 1,
                 'exceptions'    => 1,
@@ -82,7 +86,10 @@ class RiscoController extends Controller
             //$objClient->__setSoapHeaders($HeaderReq);
             $response = $objClient->__soapCall('getFinancialInfo', ['FinReq' => $FinReq]);
 
+            \Log::debug((array) $response);
             return (array) $response;
+
+
         } catch (\Exception $e) {
             \Log::debug('Request: ');
             \Log::debug($objClient->__getLastRequest());
@@ -92,26 +99,41 @@ class RiscoController extends Controller
             \Log::debug($e->getTraceAsString());
 
             return $e->getMessage();
-        }
+        }*/
 
         //phpro
-        /*$request = new MultiArgumentRequest($FinServiceReq);
+        $request = new MultiArgumentRequest(['FinReq' => $FinReq]);
+        //$request = new RiscoRequest($FinReq);
 
         $clientFactory = new ClientFactory(RiscoClient::class);
         $soapOptions = [
-            'cache_wsdl' => WSDL_CACHE_NONE
+            'cache_wsdl' => WSDL_CACHE_NONE,
+            'trace'         => 1,
+            'exceptions'    => 1,
         ];
 
         $clientBuilder = new ClientBuilder($clientFactory, $WSDL, $soapOptions);
         //$clientBuilder->withLogger(new Logger());
         //$clientBuilder->withEventDispatcher(new EventDispatcher());
-        //$clientBuilder->addClassMap(new ClassMap('WsdlType', PhpType::class));
+        $clientBuilder->withClassMaps($this->getClassMap());
         //$clientBuilder->addTypeConverter(new DateTimeTypeConverter());
+        $guzzleClient = new Client();
+        $clientBuilder->withHandler(GuzzleHandle::createForClient($guzzleClient));
         $client = $clientBuilder->build();
 
-        $response = $client->getFinancialInfo($request);*/
+        $response = $client->getFinancialInfo($request);
+        $result = $response->getResult();
+        Log::info((array)$result);
 
-        return $response;
+        return (array) $result;
+
+        $xmlString = $result->getFinancial_Res()->getFIN_Res()->getRawData();
+        $xmlObject = simplexml_load_string($xmlString);
+        $json = json_encode($xmlObject);
+        $array = json_decode($json,TRUE);
+
+        Log::info($array);
+        return (array) $array;
     }
 
     public function destroy(SubscribedApp $subscribedApp)
@@ -239,5 +261,39 @@ class RiscoController extends Controller
         }
 
         return $tokenResponseData;
+    }
+
+    private function getClassMap()
+    {
+        return new ClassMapCollection([
+            new ClassMap('RiscoReq', \LaravelEnso\Risco\app\Classes\Generated\RiscoReq::class),
+            new ClassMap('FinReq', \LaravelEnso\Risco\app\Classes\Generated\FinReq::class),
+            new ClassMap('RiscoRes', \LaravelEnso\Risco\app\Classes\Generated\RiscoRes::class),
+            new ClassMap('HeaderReq', \LaravelEnso\Risco\app\Classes\Generated\HeaderReq::class),
+            new ClassMap('ServiceReq', \LaravelEnso\Risco\app\Classes\Generated\ServiceReq::class),
+            new ClassMap('FinServiceReq', \LaravelEnso\Risco\app\Classes\Generated\FinServiceReq::class),
+            new ClassMap('HeaderRes', \LaravelEnso\Risco\app\Classes\Generated\HeaderRes::class),
+            new ClassMap('Reports', \LaravelEnso\Risco\app\Classes\Generated\Reports::class),
+            new ClassMap('DataType', \LaravelEnso\Risco\app\Classes\Generated\DataType::class),
+            new ClassMap('Rapoarte_Res', \LaravelEnso\Risco\app\Classes\Generated\Rapoarte_Res::class),
+            new ClassMap('Errors', \LaravelEnso\Risco\app\Classes\Generated\Errors::class),
+            new ClassMap('JUST_Res', \LaravelEnso\Risco\app\Classes\Generated\JUST_Res::class),
+            new ClassMap('RAT_Res', \LaravelEnso\Risco\app\Classes\Generated\RAT_Res::class),
+            new ClassMap('RES_Res', \LaravelEnso\Risco\app\Classes\Generated\RES_Res::class),
+            new ClassMap('LCO_Res', \LaravelEnso\Risco\app\Classes\Generated\LCO_Res::class),
+            new ClassMap('ACT_Res', \LaravelEnso\Risco\app\Classes\Generated\ACT_Res::class),
+            new ClassMap('ISACT_Res', \LaravelEnso\Risco\app\Classes\Generated\ISACT_Res::class),
+            new ClassMap('ONRC_Res', \LaravelEnso\Risco\app\Classes\Generated\ONRC_Res::class),
+            new ClassMap('BI_Res', \LaravelEnso\Risco\app\Classes\Generated\BI_Res::class),
+            new ClassMap('CIP_Res', \LaravelEnso\Risco\app\Classes\Generated\CIP_Res::class),
+            new ClassMap('PIM_Res', \LaravelEnso\Risco\app\Classes\Generated\PIM_Res::class),
+            new ClassMap('FinancialInfo', \LaravelEnso\Risco\app\Classes\Generated\FinancialInfo::class),
+            new ClassMap('Financial_Res', \LaravelEnso\Risco\app\Classes\Generated\Financial_Res::class),
+            new ClassMap('FIN_Res', \LaravelEnso\Risco\app\Classes\Generated\FIN_Res::class),
+            new ClassMap('IID_Res', \LaravelEnso\Risco\app\Classes\Generated\IID_Res::class),
+            new ClassMap('STS_Res', \LaravelEnso\Risco\app\Classes\Generated\STS_Res::class),
+        ]);
+
+
     }
 }
