@@ -62,16 +62,16 @@ class Reports implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'JUST' => $this->JUST,
-            'RAT' => $this->RAT,
-            'RES' => $this->RES,
-            'LCO' => $this->LCO,
-            'ACT' => $this->ACT,
+            'JUST'  => $this->JUST,
+            'RAT'   => $this->RAT,
+            'RES'   => $this->RES,
+            'LCO'   => $this->LCO,
+            'ACT'   => $this->ACT,
             'ISACT' => $this->ISACT,
-            'BI' => $this->BI,
-            'CIP' => $this->CIP,
-            'ONRC' => $this->ONRC,
-            'PIM' => $this->PIM,
+            'BI'    => $this->BI,
+            'CIP'   => $this->CIP,
+            'ONRC'  => $this->ONRC,
+            'PIM'   => $this->PIM,
         ];
     }
 

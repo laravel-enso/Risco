@@ -23,7 +23,7 @@ class FinancialInfo implements JsonSerializable
     {
         return [
             'Financial_Res' => $this->Financial_Res,
-            'Errors' => $this->Errors,
+            'Errors'        => $this->Errors,
         ];
     }
 

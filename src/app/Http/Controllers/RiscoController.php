@@ -19,7 +19,6 @@ use LaravelEnso\Risco\app\Enums\DataTypesEnum;
 use LaravelEnso\Risco\app\Enums\SubscribedAppTypesEnum;
 use LaravelEnso\Risco\app\Http\Requests\ValidateAppSubscriptionRequest;
 use LaravelEnso\Risco\app\Models\SubscribedApp;
-use Meng\AsyncSoap\Guzzle\Factory;
 use Phpro\SoapClient\ClientBuilder;
 use Phpro\SoapClient\ClientFactory;
 use Phpro\SoapClient\Soap\ClassMap\ClassMap;
@@ -27,7 +26,6 @@ use Phpro\SoapClient\Soap\ClassMap\ClassMapCollection;
 use Phpro\SoapClient\Soap\Handler\GuzzleHandle;
 use Phpro\SoapClient\Soap\TypeConverter\DateTimeTypeConverter;
 use Phpro\SoapClient\Type\MultiArgumentRequest;
-use SoapClient;
 
 class RiscoController extends Controller
 {
@@ -71,8 +69,6 @@ class RiscoController extends Controller
 
         $WSDL = 'http://dev.risco.ro/RiscoWs/RapoarteRisco.php?wsdl';
 
-
-
         //phpro
         $request = new MultiArgumentRequest(['FinReq' => $FinReq]);
         //$request = new RiscoRequest($FinReq);
@@ -96,9 +92,7 @@ class RiscoController extends Controller
         $response = $client->getFinancialInfo($request);
         $result = $response->getResult();
 
-
         $this->processFin_ResRawData($result);
-
 
         return json_encode($result);
     }
@@ -264,15 +258,14 @@ class RiscoController extends Controller
 
     private function processFin_ResRawData(&$result)
     {
-
-        if(!$result->getFinancial_Res()->getFIN_Res()) {
+        if (!$result->getFinancial_Res()->getFIN_Res()) {
             return;
         }
 
         $xmlString = $result->getFinancial_Res()->getFIN_Res()->getRawData();
         $xmlObject = simplexml_load_string($xmlString);
         $json = json_encode($xmlObject);
-        $array = json_decode($json,TRUE);
+        $array = json_decode($json, true);
 
         $result->getFinancial_Res()->getFIN_Res()->setRawData($array);
     }

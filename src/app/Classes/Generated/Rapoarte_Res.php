@@ -62,16 +62,16 @@ class Rapoarte_Res implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'JUST_Res' => $this->JUST_Res,
-            'RAT_Res' => $this->RAT_Res,
-            'RES_Res' => $this->RES_Res,
-            'LCO_Res' => $this->LCO_Res,
-            'ACT_Res' => $this->ACT_Res,
+            'JUST_Res'  => $this->JUST_Res,
+            'RAT_Res'   => $this->RAT_Res,
+            'RES_Res'   => $this->RES_Res,
+            'LCO_Res'   => $this->LCO_Res,
+            'ACT_Res'   => $this->ACT_Res,
             'ISACT_Res' => $this->ISACT_Res,
-            'ONRC_Res' => $this->ONRC_Res,
-            'BI_Res' => $this->BI_Res,
-            'CIP_Res' => $this->CIP_Res,
-            'PIM_Res' => $this->PIM_Res,
+            'ONRC_Res'  => $this->ONRC_Res,
+            'BI_Res'    => $this->BI_Res,
+            'CIP_Res'   => $this->CIP_Res,
+            'PIM_Res'   => $this->PIM_Res,
         ];
     }
 

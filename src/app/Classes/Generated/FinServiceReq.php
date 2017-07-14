@@ -22,7 +22,7 @@ class FinServiceReq implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'CUI' => $this->CUI,
+            'CUI'      => $this->CUI,
             'DataType' => $this->DataType,
         ];
     }

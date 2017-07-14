@@ -27,8 +27,8 @@ class ServiceReq implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'CUI' => $this->CUI,
-            'Reports' => $this->Reports,
+            'CUI'         => $this->CUI,
+            'Reports'     => $this->Reports,
             'ContentType' => $this->ContentType,
         ];
     }
