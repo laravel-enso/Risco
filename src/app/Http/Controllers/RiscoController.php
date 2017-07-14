@@ -3,6 +3,7 @@
 namespace LaravelEnso\Risco\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -10,33 +11,124 @@ use Illuminate\Support\Facades\Validator;
 use LaravelEnso\Risco\app\Classes\ApiRequestHub;
 use LaravelEnso\Risco\app\Classes\PreferencesStructureBuilder;
 use LaravelEnso\Risco\app\Classes\ResponseDataWrapper;
+use LaravelEnso\Risco\app\Classes\RiscoClient;
 use LaravelEnso\Risco\app\Classes\TokenRequestHub;
 use LaravelEnso\Risco\app\Enums\DataTypesEnum;
 use LaravelEnso\Risco\app\Enums\SubscribedAppTypesEnum;
 use LaravelEnso\Risco\app\Http\Requests\ValidateAppSubscriptionRequest;
 use LaravelEnso\Risco\app\Models\SubscribedApp;
 use LaravelEnso\Core\app\Exceptions\EnsoException;
+use Meng\AsyncSoap\Guzzle\Factory;
+use Phpro\SoapClient\ClientBuilder;
+use Phpro\SoapClient\ClientFactory;
+use Phpro\SoapClient\Soap\TypeConverter\DateTimeTypeConverter;
+use Phpro\SoapClient\Type\MultiArgumentRequest;
+use SoapClient;
 
 class RiscoController extends Controller
 {
-    public function updatePreferences(Request $request, SubscribedApp $subscribedApp)
-    {
-        $subscribedApp->preferences = json_encode($request->get('preferences'));
-        $subscribedApp->save();
-    }
 
-    public function setMaintenanceMode(Request $request, SubscribedApp $subscribedApp)
+    public function identification()
     {
-        $exitCode = ApiRequestHub::setMaintenanceMode($request, $subscribedApp);
 
-        return [
-            'message' => __('Application is now in maintenance mode'),
+        $user = 'office@earthlink.ro';
+        $pass = 'earth104';
+
+
+        //$client = new Client();
+
+        $HeaderReq = [
+            'channel'      => 'RISCO_RAP',
+            'extref'       => '111', // identificator furnizat de client, va fi intors in raspuns
+            'intref'       => '', // identificator intern furnizat de risco
+            'daterequest'  => date('Y-m-d H:i:s'), // data cererii
+            'dateresponse' => '', // data raspunsului
+            'psign'        => '', // calculat cu formula din documentatie
+            'user'         => $user, // utilizator cont risco
+            'password'     => $pass, // parola cont risco
         ];
+
+        $key = '46ad1fc5cxzd4fe98646ud9fcr83';
+        $HeaderReq['psign'] = md5($HeaderReq['extref'] . $HeaderReq['user'] . $key . $HeaderReq['daterequest'] . $HeaderReq['channel']);
+        Log::debug('PSIGN CALCULAT DE LA CLIENT: ' . $HeaderReq['psign']);
+
+        $DataType = array(
+            'FIN' => 1,
+            'IID' => 1,
+            'STS' => 1,
+        );
+
+        $FinServiceReq = array(
+            'CUI'      => '22197648',
+            'DataType' => $DataType,
+        );
+
+        $FinReq = array(
+            'HeaderReq'     => $HeaderReq,
+            'FinServiceReq' => $FinServiceReq,
+        );
+
+
+        $WSDL = 'http://dev.risco.ro/RiscoWs/RapoarteRisco.php?wsdl';
+
+        //meng-tian
+        /* $factory = new Factory();
+         $client = $factory->create(new Client(), $WSDL);
+         $result = $client->call('getFinancialInfo', $FinReq);
+         return $result;*/
+
+        //basic
+        try {
+
+            $objClient = new SoapClient($WSDL, [
+                "trace"         => 1,
+                "exceptions"    => 1,
+            ]);
+            //$objClient->__setSoapHeaders($HeaderReq);
+            $response = $objClient->__soapCall('getFinancialInfo', ['FinReq' => $FinReq]);
+
+            return (array)$response;
+
+
+        } catch (\Exception $e) {
+            \Log::debug("Request: ");
+            \Log::debug($objClient->__getLastRequest());
+            \Log::debug("Response: ");
+            \Log::debug($objClient->__getLastResponse());
+            \Log::info($e->getMessage());
+            \Log::debug($e->getTraceAsString());
+
+            return $e->getMessage();
+        }
+
+
+
+        //phpro
+        /*$request = new MultiArgumentRequest($FinServiceReq);
+
+        $clientFactory = new ClientFactory(RiscoClient::class);
+        $soapOptions = [
+            'cache_wsdl' => WSDL_CACHE_NONE
+        ];
+
+        $clientBuilder = new ClientBuilder($clientFactory, $WSDL, $soapOptions);
+        //$clientBuilder->withLogger(new Logger());
+        //$clientBuilder->withEventDispatcher(new EventDispatcher());
+        //$clientBuilder->addClassMap(new ClassMap('WsdlType', PhpType::class));
+        //$clientBuilder->addTypeConverter(new DateTimeTypeConverter());
+        $client = $clientBuilder->build();
+
+        $response = $client->getFinancialInfo($request);*/
+
+        return $response;
     }
+
 
     public function destroy(SubscribedApp $subscribedApp)
     {
+
         DB::transaction(function () use ($subscribedApp) {
+
             $subscribedApp->delete();
             $tokenResponseData = TokenRequestHub::deleteToken(
                 $subscribedApp->type,
@@ -55,6 +147,7 @@ class RiscoController extends Controller
 
     public function index()
     {
+
         $activeApps = json_encode(SubscribedApp::orderBy('name')->get());
         $subscribedAppTypes = (new SubscribedAppTypesEnum())->getJsonKVData();
         $dataTypes = (new DataTypesEnum())->getJsonKVData();
@@ -65,6 +158,7 @@ class RiscoController extends Controller
 
     public function store(Request $request)
     {
+
         $validator = $this->validateRequest($request);
         if ($validator->fails()) {
             throw new EnsoException('The form has errors', 'error', $validator->errors()->toArray(), 422);
@@ -76,6 +170,7 @@ class RiscoController extends Controller
             $newSubscribedApp = null;
 
             DB::transaction(function () use ($request, $tokenResponseData, &$newSubscribedApp) {
+
                 $newSubscribedApp = new SubscribedApp($request->all());
                 $newSubscribedApp->token = $tokenResponseData->access_token;
                 $newSubscribedApp->preferences = PreferencesStructureBuilder::build($request->get('type'));
@@ -96,6 +191,7 @@ class RiscoController extends Controller
 
     public function get(Request $request, SubscribedApp $subscribedApp)
     {
+
         $result = new ResponseDataWrapper($subscribedApp->id, $subscribedApp->name, $subscribedApp->type);
 
         try {
@@ -111,6 +207,7 @@ class RiscoController extends Controller
 
     public function clearLaravelLog(Request $request, SubscribedApp $subscribedApp)
     {
+
         $response = ApiRequestHub::clearLaravelLog($request, $subscribedApp);
 
         return [
@@ -120,6 +217,7 @@ class RiscoController extends Controller
 
     private function translateData($originalData)
     {
+
         $types = (new DataTypesEnum())->getData();
         $translatedData = json_decode(json_encode($originalData), true);
 
@@ -133,6 +231,7 @@ class RiscoController extends Controller
 
     private function validateRequest(Request $request)
     {
+
         $rules = (new ValidateAppSubscriptionRequest())->rules();
         $validator = Validator::make($request->all(), $rules);
 
@@ -148,6 +247,7 @@ class RiscoController extends Controller
      */
     private function getClientToken(Request $request)
     {
+
         try {
             $tokenResponseData = TokenRequestHub::requestNewToken($request);
         } catch (\Exception $e) {
