@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 
 class RiscoServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap the application services.
      *
@@ -37,13 +36,12 @@ class RiscoServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config' => config_path(),
         ], 'enso-config');
-
     }
 
     private function loadDependencies()
     {
-        $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
-        $this->loadViewsFrom(__DIR__ . '/resources/views', 'laravel-enso/risco');
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-enso/risco');
     }
 }

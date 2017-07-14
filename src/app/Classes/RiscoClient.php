@@ -13,10 +13,10 @@ use Phpro\SoapClient\Type\RequestInterface;
 
 class RiscoClient extends Client
 {
-
     public function getFinancialInfo(RequestInterface $request)
     {
-        \Log::debug("hit getFinancialInfo");
+        \Log::debug('hit getFinancialInfo');
+
         return $this->call('getFinancialInfo', $request);
     }
 }

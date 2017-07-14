@@ -9,8 +9,8 @@
 namespace LaravelEnso\Risco\app\Classes;
 
 use Illuminate\Http\Request;
-use LaravelEnso\Risco\app\Models\SubscribedApp;
 use LaravelEnso\Core\app\Exceptions\EnsoException;
+use LaravelEnso\Risco\app\Models\SubscribedApp;
 
 class ApiRequestHub
 {

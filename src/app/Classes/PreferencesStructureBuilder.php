@@ -8,8 +8,8 @@
 
 namespace LaravelEnso\Risco\app\Classes;
 
-use LaravelEnso\Risco\app\Enums\DataTypesEnum;
 use LaravelEnso\Helpers\Classes\Object;
+use LaravelEnso\Risco\app\Enums\DataTypesEnum;
 
 class PreferencesStructureBuilder
 {
