@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class FIN_Res implements JsonSerializable
 {
-
     /**
      * @var string
      */
@@ -48,7 +47,4 @@ class FIN_Res implements JsonSerializable
     {
         return $this->Error;
     }
-
-
 }
-

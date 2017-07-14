@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class RiscoRes implements JsonSerializable
 {
-
     /**
      * @var HeaderRes
      */
@@ -71,7 +70,4 @@ class RiscoRes implements JsonSerializable
     {
         return $this->Errors;
     }
-
-
 }
-

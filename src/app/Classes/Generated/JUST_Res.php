@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class JUST_Res implements JsonSerializable
 {
-
     /**
      * @var anyType
      */
@@ -43,7 +42,4 @@ class JUST_Res implements JsonSerializable
     {
         return $this->Error;
     }
-
-
 }
-

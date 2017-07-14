@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class FinancialInfo implements JsonSerializable
 {
-
     /**
      * @var Financial_Res
      */
@@ -43,7 +42,4 @@ class FinancialInfo implements JsonSerializable
     {
         return $this->Errors;
     }
-
-
 }
-

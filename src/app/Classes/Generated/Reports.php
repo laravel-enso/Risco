@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class Reports implements JsonSerializable
 {
-
     /**
      * @var int
      */
@@ -155,7 +154,4 @@ class Reports implements JsonSerializable
     {
         return $this->PIM;
     }
-
-
 }
-

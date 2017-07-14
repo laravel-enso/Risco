@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class RiscoReq implements JsonSerializable
 {
-
     /**
      * @var HeaderReq
      */
@@ -43,7 +42,4 @@ class RiscoReq implements JsonSerializable
     {
         return $this->ServiceReq;
     }
-
-
 }
-

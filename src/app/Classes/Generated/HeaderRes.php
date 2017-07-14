@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class HeaderRes implements JsonSerializable
 {
-
     /**
      * @var string
      */
@@ -113,7 +112,4 @@ class HeaderRes implements JsonSerializable
     {
         return $this->user;
     }
-
-
 }
-

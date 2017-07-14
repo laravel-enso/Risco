@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class Errors implements JsonSerializable
 {
-
     /**
      * @var string
      */
@@ -43,7 +42,4 @@ class Errors implements JsonSerializable
     {
         return $this->ErrorDetails;
     }
-
-
 }
-

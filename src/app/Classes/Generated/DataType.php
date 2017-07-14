@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class DataType implements JsonSerializable
 {
-
     /**
      * @var int
      */
@@ -57,7 +56,4 @@ class DataType implements JsonSerializable
     {
         return $this->STS;
     }
-
-
 }
-

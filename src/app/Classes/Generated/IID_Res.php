@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class IID_Res implements JsonSerializable
 {
-
     /**
      * @var anyType
      */
@@ -43,7 +42,4 @@ class IID_Res implements JsonSerializable
     {
         return $this->Error;
     }
-
-
 }
-

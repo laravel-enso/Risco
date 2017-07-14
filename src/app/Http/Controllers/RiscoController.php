@@ -55,8 +55,8 @@ class RiscoController extends Controller
 
         $DataType = [
             'FIN' => 1,
-            'IID' => 0,
-            'STS' => 0,
+            'IID' => 1,
+            'STS' => 1,
         ];
 
         $FinServiceReq = [
@@ -79,7 +79,7 @@ class RiscoController extends Controller
 
         $clientFactory = new ClientFactory(RiscoClient::class);
         $soapOptions = [
-            'cache_wsdl' => WSDL_CACHE_NONE,
+            'cache_wsdl'    => WSDL_CACHE_NONE,
             'trace'         => 1,
             'exceptions'    => 1,
         ];
@@ -96,11 +96,11 @@ class RiscoController extends Controller
         $response = $client->getFinancialInfo($request);
         $result = $response->getResult();
 
+
         $this->processFin_ResRawData($result);
 
 
-        Log::info($result);
-        return $result;
+        return json_encode($result);
     }
 
     public function destroy(SubscribedApp $subscribedApp)
@@ -260,8 +260,6 @@ class RiscoController extends Controller
             new ClassMap('IID_Res', \LaravelEnso\Risco\app\Classes\Generated\IID_Res::class),
             new ClassMap('STS_Res', \LaravelEnso\Risco\app\Classes\Generated\STS_Res::class),
         ]);
-
-
     }
 
     private function processFin_ResRawData(&$result)

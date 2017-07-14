@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class Financial_Res implements JsonSerializable
 {
-
     /**
      * @var FIN_Res
      */
@@ -57,7 +56,4 @@ class Financial_Res implements JsonSerializable
     {
         return $this->STS_Res;
     }
-
-
 }
-

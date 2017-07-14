@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class HeaderReq implements JsonSerializable
 {
-
     /**
      * @var string
      */
@@ -127,7 +126,4 @@ class HeaderReq implements JsonSerializable
     {
         return $this->password;
     }
-
-
 }
-

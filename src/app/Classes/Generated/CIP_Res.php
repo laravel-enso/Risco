@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class CIP_Res implements JsonSerializable
 {
-
     /**
      * @var anyType
      */
@@ -43,7 +42,4 @@ class CIP_Res implements JsonSerializable
     {
         return $this->Error;
     }
-
-
 }
-

@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class Rapoarte_Res implements JsonSerializable
 {
-
     /**
      * @var JUST_Res
      */
@@ -155,7 +154,4 @@ class Rapoarte_Res implements JsonSerializable
     {
         return $this->PIM_Res;
     }
-
-
 }
-

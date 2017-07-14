@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class FinServiceReq implements JsonSerializable
 {
-
     /**
      * @var string
      */
@@ -43,7 +42,4 @@ class FinServiceReq implements JsonSerializable
     {
         return $this->DataType;
     }
-
-
 }
-

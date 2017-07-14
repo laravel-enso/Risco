@@ -6,7 +6,6 @@ use JsonSerializable;
 
 class ServiceReq implements JsonSerializable
 {
-
     /**
      * @var string
      */
@@ -57,7 +56,4 @@ class ServiceReq implements JsonSerializable
     {
         return $this->ContentType;
     }
-
-
 }
-
