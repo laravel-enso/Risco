@@ -20,6 +20,8 @@ use LaravelEnso\Risco\app\Enums\SubscribedAppTypesEnum;
 use LaravelEnso\Risco\app\Http\Requests\ValidateAppSubscriptionRequest;
 use LaravelEnso\Risco\app\Models\SubscribedApp;
 use Meng\AsyncSoap\Guzzle\Factory;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Phpro\SoapClient\ClientBuilder;
 use Phpro\SoapClient\ClientFactory;
 use Phpro\SoapClient\Soap\ClassMap\ClassMap;
@@ -28,10 +30,12 @@ use Phpro\SoapClient\Soap\Handler\GuzzleHandle;
 use Phpro\SoapClient\Soap\TypeConverter\DateTimeTypeConverter;
 use Phpro\SoapClient\Type\MultiArgumentRequest;
 use SoapClient;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 
 class RiscoController extends Controller
 {
-    public function identification()
+    public function query(Request $request)
     {
         $user = 'office@earthlink.ro';
         $pass = 'earth104';
@@ -54,13 +58,13 @@ class RiscoController extends Controller
         Log::debug('PSIGN CALCULAT DE LA CLIENT: '.$HeaderReq['psign']);
 
         $DataType = [
-            'FIN' => 1,
-            'IID' => 1,
-            'STS' => 1,
+            'FIN' => $request->get('fin'),
+            'IID' => $request->get('iid'),
+            'STS' => $request->get('sts'),
         ];
 
         $FinServiceReq = [
-            'CUI'      => '22197648', //15565607
+            'CUI'      => $request->get('cui'), //15565607
             'DataType' => $DataType,
         ];
 
@@ -71,11 +75,13 @@ class RiscoController extends Controller
 
         $WSDL = 'http://dev.risco.ro/RiscoWs/RapoarteRisco.php?wsdl';
 
-
+        // create a log channel
+        //$log = new Logger('name');
+        //$log->pushHandler(new StreamHandler('/home/mihai/work/_proj/enso/storage/logs/your.log', Logger::WARNING));
+        //$log->warning('Foo');
 
         //phpro
         $request = new MultiArgumentRequest(['FinReq' => $FinReq]);
-        //$request = new RiscoRequest($FinReq);
 
         $clientFactory = new ClientFactory(RiscoClient::class);
         $soapOptions = [
@@ -85,12 +91,14 @@ class RiscoController extends Controller
         ];
 
         $clientBuilder = new ClientBuilder($clientFactory, $WSDL, $soapOptions);
-        //$clientBuilder->withLogger(new Logger());
-        //$clientBuilder->withEventDispatcher(new EventDispatcher());
+        //$clientBuilder->withLogger($log);
+        $clientBuilder->withEventDispatcher(new EventDispatcher());
         $clientBuilder->withClassMaps($this->getClassMaps());
         //$clientBuilder->addTypeConverter(new DateTimeTypeConverter());
+
         $guzzleClient = new Client();
         $clientBuilder->withHandler(GuzzleHandle::createForClient($guzzleClient));
+
         $client = $clientBuilder->build();
 
         $response = $client->getFinancialInfo($request);
@@ -100,36 +108,17 @@ class RiscoController extends Controller
         $this->processFin_ResRawData($result);
 
 
+        \Log::debug($client->debugLastSoapRequest());
+
         return json_encode($result);
     }
 
-    public function destroy(SubscribedApp $subscribedApp)
-    {
-        DB::transaction(function () use ($subscribedApp) {
-            $subscribedApp->delete();
-            $tokenResponseData = TokenRequestHub::deleteToken(
-                $subscribedApp->type,
-                $subscribedApp->url,
-                $subscribedApp->token
-            );
 
-            $responseStatusCode = $tokenResponseData->getStatusCode();
-            if ($responseStatusCode !== 200) {
-                throw new EnsoException(__('Could not delete token'));
-            }
-
-            return 'Deleted';
-        });
-    }
 
     public function index()
     {
-        $activeApps = json_encode(SubscribedApp::orderBy('name')->get());
-        $subscribedAppTypes = (new SubscribedAppTypesEnum())->getJsonKVData();
-        $dataTypes = (new DataTypesEnum())->getJsonKVData();
-
-        return view('laravel-enso/Risco::Risco.index',
-            compact('activeApps', 'subscribedAppTypes', 'dataTypes'));
+        return view('laravel-enso/risco::risco.index',
+            compact(''));
     }
 
     public function store(Request $request)
