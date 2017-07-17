@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ValidateRiscoRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +13,6 @@ class ValidateRiscoRequest extends FormRequest
      */
     public function authorize()
     {
-
         return true;
     }
 
@@ -25,7 +23,6 @@ class ValidateRiscoRequest extends FormRequest
      */
     public function rules()
     {
-
         return [
 
             'fin' => 'required',

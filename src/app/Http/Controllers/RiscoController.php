@@ -4,7 +4,6 @@ namespace LaravelEnso\Risco\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use LaravelEnso\Risco\app\Classes\Formatters\FINResponse;
 use LaravelEnso\Risco\app\Classes\Formatters\IIDResponse;
