@@ -4,8 +4,9 @@ namespace LaravelEnso\Risco\app\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateAppSubscriptionRequest extends FormRequest
+class ValidateRiscoRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,6 +14,7 @@ class ValidateAppSubscriptionRequest extends FormRequest
      */
     public function authorize()
     {
+
         return true;
     }
 
@@ -23,20 +25,13 @@ class ValidateAppSubscriptionRequest extends FormRequest
      */
     public function rules()
     {
-        $clientId = 'nullable';
-
-        if (request()->has('type') && request()->get('type') == 2) {
-            $clientId = 'required';
-        }
 
         return [
 
-            'client_id'   => $clientId,
-            'url'         => 'required',
-            'type'        => 'required',
-            'secret'      => 'required',
-            'name'        => 'required',
-            'description' => 'nullable',
+            'fin' => 'required',
+            'iid' => 'required',
+            'sts' => 'required',
+            'cui' => 'required',
         ];
     }
 }

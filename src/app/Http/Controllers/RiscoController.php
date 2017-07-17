@@ -11,6 +11,7 @@ use LaravelEnso\Risco\app\Classes\Formatters\IIDResponse;
 use LaravelEnso\Risco\app\Classes\Formatters\STSResponse;
 use LaravelEnso\Risco\app\Classes\RiscoClient;
 use LaravelEnso\Risco\app\Enums\DataTypesEnum;
+use LaravelEnso\Risco\app\Http\Requests\ValidateRiscoRequest;
 use Phpro\SoapClient\ClientBuilder;
 use Phpro\SoapClient\ClientFactory;
 use Phpro\SoapClient\Soap\ClassMap\ClassMap;
@@ -21,10 +22,10 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class RiscoController extends Controller
 {
-    public function query(Request $request)
+    public function query(ValidateRiscoRequest $request)
     {
-        $user = 'office@earthlink.ro';
-        $pass = 'earth104';
+        $user = config('risco.username');
+        $pass = config('risco.password');
 
         //$client = new Client();
 
