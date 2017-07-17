@@ -52,14 +52,14 @@ class HeaderReq implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'channel' => $this->channel,
-            'extref' => $this->extref,
-            'intref' => $this->intref,
-            'daterequest' => $this->daterequest,
+            'channel'      => $this->channel,
+            'extref'       => $this->extref,
+            'intref'       => $this->intref,
+            'daterequest'  => $this->daterequest,
             'dateresponse' => $this->dateresponse,
-            'psign' => $this->psign,
-            'user' => $this->user,
-            'password' => $this->password,
+            'psign'        => $this->psign,
+            'user'         => $this->user,
+            'password'     => $this->password,
         ];
     }
 

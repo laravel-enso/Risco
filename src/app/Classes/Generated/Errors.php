@@ -22,7 +22,7 @@ class Errors implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'ErrorCode' => $this->ErrorCode,
+            'ErrorCode'    => $this->ErrorCode,
             'ErrorDetails' => $this->ErrorDetails,
         ];
     }

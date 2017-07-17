@@ -22,7 +22,7 @@ class FinReq implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'HeaderReq' => $this->HeaderReq,
+            'HeaderReq'     => $this->HeaderReq,
             'FinServiceReq' => $this->FinServiceReq,
         ];
     }

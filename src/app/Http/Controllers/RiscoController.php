@@ -5,32 +5,22 @@ namespace LaravelEnso\Risco\app\Http\Controllers;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use LaravelEnso\Core\app\Exceptions\EnsoException;
 use LaravelEnso\Risco\app\Classes\ApiRequestHub;
-use LaravelEnso\Risco\app\Classes\PreferencesStructureBuilder;
+use LaravelEnso\Risco\app\Classes\Formatters\FINResponse;
+use LaravelEnso\Risco\app\Classes\Formatters\IIDResponse;
+use LaravelEnso\Risco\app\Classes\Formatters\STSResponse;
 use LaravelEnso\Risco\app\Classes\ResponseDataWrapper;
 use LaravelEnso\Risco\app\Classes\RiscoClient;
-use LaravelEnso\Risco\app\Classes\RiscoRequest;
-use LaravelEnso\Risco\app\Classes\TokenRequestHub;
 use LaravelEnso\Risco\app\Enums\DataTypesEnum;
-use LaravelEnso\Risco\app\Enums\SubscribedAppTypesEnum;
-use LaravelEnso\Risco\app\Http\Requests\ValidateAppSubscriptionRequest;
-use LaravelEnso\Risco\app\Models\SubscribedApp;
-use Meng\AsyncSoap\Guzzle\Factory;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Phpro\SoapClient\ClientBuilder;
 use Phpro\SoapClient\ClientFactory;
 use Phpro\SoapClient\Soap\ClassMap\ClassMap;
 use Phpro\SoapClient\Soap\ClassMap\ClassMapCollection;
 use Phpro\SoapClient\Soap\Handler\GuzzleHandle;
-use Phpro\SoapClient\Soap\TypeConverter\DateTimeTypeConverter;
 use Phpro\SoapClient\Type\MultiArgumentRequest;
-use SoapClient;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 
 
 class RiscoController extends Controller
@@ -75,6 +65,7 @@ class RiscoController extends Controller
 
         $WSDL = 'http://dev.risco.ro/RiscoWs/RapoarteRisco.php?wsdl';
 
+
         // create a log channel
         //$log = new Logger('name');
         //$log->pushHandler(new StreamHandler('/home/mihai/work/_proj/enso/storage/logs/your.log', Logger::WARNING));
@@ -104,13 +95,19 @@ class RiscoController extends Controller
         $response = $client->getFinancialInfo($request);
         $result = $response->getResult();
 
-
         $this->processFin_ResRawData($result);
 
 
-        \Log::debug($client->debugLastSoapRequest());
+        $processedFinResult = FINResponse::format($result->getFinancial_Res()->getFIN_Res());
+        $processedIidResult = IIDResponse::format($result->getFinancial_Res()->getIID_Res());
+        $processedStsResult = STSResponse::format($result->getFinancial_Res()->getSTS_Res());
 
-        return json_encode($result);
+
+        return [
+            'FIN_Res' => $processedFinResult,
+            'IID_Res' => $processedIidResult,
+            'STS_Res' => $processedStsResult,
+        ];
     }
 
 
@@ -121,60 +118,6 @@ class RiscoController extends Controller
             compact(''));
     }
 
-    public function store(Request $request)
-    {
-        $validator = $this->validateRequest($request);
-        if ($validator->fails()) {
-            throw new EnsoException('The form has errors', 'error', $validator->errors()->toArray(), 422);
-        }
-
-        $tokenResponseData = $this->getClientToken($request);
-
-        try {
-            $newSubscribedApp = null;
-
-            DB::transaction(function () use ($request, $tokenResponseData, &$newSubscribedApp) {
-                $newSubscribedApp = new SubscribedApp($request->all());
-                $newSubscribedApp->token = $tokenResponseData->access_token;
-                $newSubscribedApp->preferences = PreferencesStructureBuilder::build($request->get('type'));
-                $newSubscribedApp->save();
-            });
-
-            return $newSubscribedApp;
-        } catch (\Exception $e) {
-            Log::info($e->getMessage());
-            TokenRequestHub::deleteToken(
-                $request->get('type'),
-                $request->get('url'),
-                $tokenResponseData->access_token);
-
-            return response('Server Error', 500);
-        }
-    }
-
-    public function get(Request $request, SubscribedApp $subscribedApp)
-    {
-        $result = new ResponseDataWrapper($subscribedApp->id, $subscribedApp->name, $subscribedApp->type);
-
-        try {
-            $response = ApiRequestHub::getAll($request, $subscribedApp);
-            $originalData = json_decode($response->getBody(), true);
-            $result->data = $this->translateData($originalData);
-        } catch (\Exception $e) {
-            $result->addError($e->getMessage());
-        }
-
-        return $result;
-    }
-
-    public function clearLaravelLog(Request $request, SubscribedApp $subscribedApp)
-    {
-        $response = ApiRequestHub::clearLaravelLog($request, $subscribedApp);
-
-        return [
-            'message' => __('Application Log deleted!'),
-        ];
-    }
 
     private function translateData($originalData)
     {
@@ -189,35 +132,7 @@ class RiscoController extends Controller
         return $translatedData;
     }
 
-    private function validateRequest(Request $request)
-    {
-        $rules = (new ValidateAppSubscriptionRequest())->rules();
-        $validator = Validator::make($request->all(), $rules);
 
-        return $validator;
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @throws EnsoException
-     *
-     * @return \LaravelEnso\Helpers\Classes\Object|object
-     */
-    private function getClientToken(Request $request)
-    {
-        try {
-            $tokenResponseData = TokenRequestHub::requestNewToken($request);
-        } catch (\Exception $e) {
-            throw new EnsoException(__('Unable to communicate with server. Check URL!'));
-        }
-
-        if (!$tokenResponseData) {
-            throw new EnsoException(__('Unable to get valid token. Check oauth data!'));
-        }
-
-        return $tokenResponseData;
-    }
 
     private function getClassMaps()
     {
@@ -253,15 +168,14 @@ class RiscoController extends Controller
 
     private function processFin_ResRawData(&$result)
     {
-
-        if(!$result->getFinancial_Res()->getFIN_Res()) {
+        if (!$result->getFinancial_Res()->getFIN_Res()) {
             return;
         }
 
         $xmlString = $result->getFinancial_Res()->getFIN_Res()->getRawData();
         $xmlObject = simplexml_load_string($xmlString);
         $json = json_encode($xmlObject);
-        $array = json_decode($json,TRUE);
+        $array = json_decode($json, true);
 
         $result->getFinancial_Res()->getFIN_Res()->setRawData($array);
     }

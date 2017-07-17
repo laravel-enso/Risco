@@ -32,10 +32,10 @@ class RiscoRes implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'HeaderRes' => $this->HeaderRes,
-            'ServiceReq' => $this->ServiceReq,
+            'HeaderRes'    => $this->HeaderRes,
+            'ServiceReq'   => $this->ServiceReq,
             'Rapoarte_Res' => $this->Rapoarte_Res,
-            'Errors' => $this->Errors,
+            'Errors'       => $this->Errors,
         ];
     }
 

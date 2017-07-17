@@ -107,23 +107,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <address >
-                            {{ __("State") }}: <strong> <span v-html="companyData.State"></span></strong><br>
-                            {{ __("Start Date") }}: <span v-html="companyData.DateStart"></span><br>
-                            {{ __("CUI") }}: <span v-html="companyData.FiscalCode"></span><br>
-                            {{ __("County") }}: <span v-html="companyData.Judet"></span><br>
-                            {{ __("City") }}: <span v-html="companyData.Localitate"></span><br>
-                            {{ __("Name") }}: <span v-html="companyData.Name"></span><br>
-                            {{ __("RegNo") }}: <span v-html="companyData.RegNo"></span><br>
-                            {{ __("Street") }}: <span v-html="companyData.Strada"></span>
+
+                            <div v-for="item in details.companyData ">
+                                <strong><span v-html="item.key"></span></strong> <span v-html="item.value"></span><br>
+                            </div>
 
                         </address>
                     </div>
 
                     <div class="col-md-6">
                         <address >
-                            {{ __("Caen") }}: <strong> <span v-html="caenData.Caen"></span></strong><br>
-                            {{ __("Description") }}: <span v-html="caenData.Descriere"></span><br>
-                            {{ __("Version") }}: <span v-html="caenData.Versiune"></span><br>
+                            <div v-for="item in details.caenData ">
+                                <strong><span v-html="item.key"></span></strong> <span v-html="item.value"></span><br>
+                            </div>
 
                         </address>
                     </div>
@@ -131,12 +127,22 @@
 
                 <hr>
 
-                <div class="row" v-for="item in financialData">
-                    <div class="col-md-6">
-                        <address >
-                            {{ __("Year / Month ") }}: <strong> <span v-html="item['@attributes'].An + '/' + item['@attributes'].Luna"></span></strong><br>
-                            {{ __("Profit net") }}: <span v-html="item['@attributes'].F20_0672"></span><br>
-                        </address>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+
+                            <div class="col-md-3" v-for="item in details.financialData">
+                                <address >
+                                    {{ __("Year / Month ") }}: <strong> <span v-html="item.year + '/' + item.month"></span></strong><br>
+
+                                    <div v-for="subitem in item.details ">
+                                        <strong><span v-html="subitem.key"></span></strong> <span v-html="subitem.value"></span><br>
+                                    </div>
+
+                                </address>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -159,65 +165,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <address >
-                            {{ __("Name") }}: <span v-html="identificationData.nume"></span><br>
-                            {{ __("State") }}: <strong> <span v-html="identificationData.stare"></span></strong><br>
-                            {{ __("County") }}: <span v-html="identificationData.judet"></span><br>
-                            {{ __("City") }}: <span v-html="identificationData.localitate"></span><br>
-                            {{ __("Address") }}: <span v-html="identificationData.adresa"></span><br>
-                            {{ __("CUI") }}: <span v-html="identificationData.codFiscal"></span><br>
-                            {{ __("fax") }}: <span v-html="identificationData.fax"></span><br>
-                            {{ __("dataInregistrareRecom") }}: <span v-html="identificationData.dataInregistrareRecom"></span><br>
-                            {{ __("formaLegala") }}: <span v-html="identificationData.formaLegala"></span><br>
-                            {{ __("dataUltimeiActualizari") }}: <span v-html="identificationData.dataUltimeiActualizari"></span><br>
-                            {{ __("cifra_de_afaceri") }}: <span v-html="identificationData.cifra_de_afaceri"></span><br>
-                            {{ __("administrator") }}: <span v-html="identificationData.administrator"></span><br>
-                            {{ __("TVAlaIncasare") }}: <span v-html="identificationData.TVAlaIncasare"></span><br>
-                            {{ __("caen") }}: <span v-html="identificationData.caen"></span><br>
-                            {{ __("caen_desc") }}: <span v-html="identificationData.caen_desc"></span><br>
-                            {{ __("nrInregistrareRecom") }}: <span v-html="identificationData.nrInregistrareRecom"></span><br>
-                            {{ __("profit_net") }}: <span v-html="identificationData.profit_net"></span><br>
-                            {{ __("tara") }}: <span v-html="identificationData.tara"></span><br>
-                            {{ __("telefon") }}: <span v-html="identificationData.telefon"></span><br>
-                        </address>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </script><script type="text/x-template" id="iid-template">
-
-        <div class="box box-primary" v-cloak>
-
-            <div class="box-header">
-                <div class="box-title">
-                    {{(__("Identification Data"))}}
-
-                </div>
-            </div>
-
-            <div class="box-body" style="">
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <address >
-                            {{ __("Name") }}: <span v-html="identificationData.nume"></span><br>
-                            {{ __("State") }}: <strong> <span v-html="identificationData.stare"></span></strong><br>
-                            {{ __("County") }}: <span v-html="identificationData.judet"></span><br>
-                            {{ __("City") }}: <span v-html="identificationData.localitate"></span><br>
-                            {{ __("Address") }}: <span v-html="identificationData.adresa"></span><br>
-                            {{ __("CUI") }}: <span v-html="identificationData.codFiscal"></span><br>
-                            {{ __("fax") }}: <span v-html="identificationData.fax"></span><br>
-                            {{ __("dataInregistrareRecom") }}: <span v-html="identificationData.dataInregistrareRecom"></span><br>
-                            {{ __("formaLegala") }}: <span v-html="identificationData.formaLegala"></span><br>
-                            {{ __("dataUltimeiActualizari") }}: <span v-html="identificationData.dataUltimeiActualizari"></span><br>
-                            {{ __("cifra_de_afaceri") }}: <span v-html="identificationData.cifra_de_afaceri"></span><br>
-                            {{ __("administrator") }}: <span v-html="identificationData.administrator"></span><br>
-                            {{ __("TVAlaIncasare") }}: <span v-html="identificationData.TVAlaIncasare"></span><br>
-                            {{ __("caen") }}: <span v-html="identificationData.caen"></span><br>
-                            {{ __("caen_desc") }}: <span v-html="identificationData.caen_desc"></span><br>
-                            {{ __("nrInregistrareRecom") }}: <span v-html="identificationData.nrInregistrareRecom"></span><br>
-                            {{ __("profit_net") }}: <span v-html="identificationData.profit_net"></span><br>
-                            {{ __("tara") }}: <span v-html="identificationData.tara"></span><br>
-                            {{ __("telefon") }}: <span v-html="identificationData.telefon"></span><br>
+                            <div v-for="item in details">
+                                <strong><span v-html="item.key"></span></strong> <span v-html="item.value"></span><br>
+                            </div>
                         </address>
                     </div>
                 </div>
@@ -241,18 +191,16 @@
                 <div class="row">
                     <div class="col-md-6">
                         <address >
-                            {{ __("Name") }}: <span v-html="statusData.nume"></span><br>
-                            {{ __("Stare") }}: <strong> <span v-html="statusData.stare"></span></strong><br>
-                            {{ __("Status") }}: <span v-html="statusData.status"></span><br>
-                            {{ __("CUI") }}: <span v-html="statusData.codFiscal"></span><br>
-                            {{ __("dataUltimeiActualizari") }}: <span v-html="statusData.dataUltimeiActualizari"></span><br>
-                            {{ __("TVAlaIncasare") }}: <span v-html="statusData.TVAlaIncasare"></span><br>
+                            <div v-for="item in details">
+                                <strong><span v-html="item.key"></span></strong> <span v-html="item.value"></span><br>
+                            </div>
                         </address>
                     </div>
                 </div>
             </div>
         </div>
     </script>
+
     <script type="text/javascript">
         let vm = new Vue({
             el: "#app",
@@ -300,7 +248,7 @@
 
                     let self = this;
                     axios.get('/risco/query', { params: payload }).then((response) => {
-                        self.companyInfo = response.data.Financial_Res;
+                        self.companyInfo = response.data;
                     });
                 },
                 reset: function () {
@@ -324,51 +272,29 @@
                         }
                     },
                     computed: {
-                        companyData: function () {
-                            return this.details.RawData.CompanyData['@attributes'];
-                        },
-                        caenData: function () {
-                            return this.details.RawData.CompanyData.Caen['@attributes'];
-                        },
-                        financialData: function () {
-                            return this.details.RawData.CompanyData.Financial;
-                        }
+
                     }
                 },
                 iidInfo: {
                     template: '#iid-template',
                     props: {
                         details: {
-                            type: Object,
+                            type: Array,
                             default: function () {
-                                return {
-                                    a: 0
-                                };
+                                return [];
                             }
                         }
-                    },
-                    computed: {
-                        identificationData: function () {
-                            return this.details.RawData.dateIdentificareFirma;
-                        },
                     }
                 },
                 stsInfo: {
                     template: '#sts-template',
                     props: {
                         details: {
-                            type: Object,
+                            type: Array,
                             default: function () {
-                                return {
-                                    a: 0
-                                };
+                                return [];
                             }
                         }
-                    },
-                    computed: {
-                        statusData: function () {
-                            return this.details.RawData.dateIdentificareFirma;
-                        },
                     }
                 }
             }

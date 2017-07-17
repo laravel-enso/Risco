@@ -23,7 +23,7 @@ class LCO_Res implements JsonSerializable
     {
         return [
             'RawData' => $this->RawData,
-            'Error' => $this->Error,
+            'Error'   => $this->Error,
         ];
     }
 

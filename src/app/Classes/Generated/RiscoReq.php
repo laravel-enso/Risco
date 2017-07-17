@@ -22,7 +22,7 @@ class RiscoReq implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'HeaderReq' => $this->HeaderReq,
+            'HeaderReq'  => $this->HeaderReq,
             'ServiceReq' => $this->ServiceReq,
         ];
     }
