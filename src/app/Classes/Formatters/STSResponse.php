@@ -12,12 +12,10 @@ use LaravelEnso\Risco\app\Classes\OrderableKV;
 
 class STSResponse
 {
-
     public static function format($riscoStatusResponse)
     {
-
-        if(!$riscoStatusResponse) {
-            return null;
+        if (!$riscoStatusResponse) {
+            return;
         }
 
         $result = self::processStatusData($riscoStatusResponse);
@@ -27,7 +25,6 @@ class STSResponse
 
     private static function processStatusData($riscoResponse)
     {
-
         $companyData = $riscoResponse->getRawData()->dateIdentificareFirma;
 
         $result = [];

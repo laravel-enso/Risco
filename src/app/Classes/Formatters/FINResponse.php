@@ -8,18 +8,16 @@
 
 namespace LaravelEnso\Risco\app\Classes\Formatters;
 
-use LaravelEnso\Risco\app\Classes\OrderableKV;
 use LaravelEnso\Risco\app\Classes\DTOs\FinancialData;
 use LaravelEnso\Risco\app\Classes\DTOs\FiscalDetails;
+use LaravelEnso\Risco\app\Classes\OrderableKV;
 
 class FINResponse
 {
-
-    public static function format( $riscoFinancialResponse)
+    public static function format($riscoFinancialResponse)
     {
-
-        if(!$riscoFinancialResponse) {
-            return null;
+        if (!$riscoFinancialResponse) {
+            return;
         }
 
         $result = new FinancialData();
@@ -33,7 +31,6 @@ class FINResponse
 
     private static function processCompanyData($riscoResponse)
     {
-
         $companyData = $riscoResponse->getRawData()['CompanyData']['@attributes'];
 
         $result = [];
@@ -55,7 +52,6 @@ class FINResponse
 
     private static function processCaenData($riscoResponse)
     {
-
         $caenData = $riscoResponse->getRawData()['CompanyData']['Caen']['@attributes'];
 
         $result = [];
@@ -69,13 +65,11 @@ class FINResponse
 
     private static function processFinancialData($riscoResponse)
     {
-
         $financialData = $riscoResponse->getRawData()['CompanyData']['Financial'];
 
         $result = [];
 
         foreach ($financialData as $item) {
-
             $attributes = $item['@attributes'];
 
             $tmp = new FiscalDetails($attributes['Luna'], $attributes['An']);
@@ -102,6 +96,4 @@ class FINResponse
 
         return $result;
     }
-
-
 }

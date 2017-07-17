@@ -12,12 +12,10 @@ use LaravelEnso\Risco\app\Classes\OrderableKV;
 
 class IIDResponse
 {
-
     public static function format($riscoIdentificationResponse)
     {
-
-        if(!$riscoIdentificationResponse) {
-            return null;
+        if (!$riscoIdentificationResponse) {
+            return;
         }
 
         $result = self::processIdentificationData($riscoIdentificationResponse);
@@ -27,7 +25,6 @@ class IIDResponse
 
     private static function processIdentificationData($riscoResponse)
     {
-
         $companyData = $riscoResponse->getRawData()->dateIdentificareFirma;
 
         $result = [];

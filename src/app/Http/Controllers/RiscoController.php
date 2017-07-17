@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use LaravelEnso\Risco\app\Classes\ApiRequestHub;
 use LaravelEnso\Risco\app\Classes\Formatters\FINResponse;
 use LaravelEnso\Risco\app\Classes\Formatters\IIDResponse;
 use LaravelEnso\Risco\app\Classes\Formatters\STSResponse;
-use LaravelEnso\Risco\app\Classes\ResponseDataWrapper;
 use LaravelEnso\Risco\app\Classes\RiscoClient;
 use LaravelEnso\Risco\app\Enums\DataTypesEnum;
 use Phpro\SoapClient\ClientBuilder;
@@ -20,8 +18,6 @@ use Phpro\SoapClient\Soap\ClassMap\ClassMapCollection;
 use Phpro\SoapClient\Soap\Handler\GuzzleHandle;
 use Phpro\SoapClient\Type\MultiArgumentRequest;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
-
 
 class RiscoController extends Controller
 {
@@ -65,7 +61,6 @@ class RiscoController extends Controller
 
         $WSDL = 'http://dev.risco.ro/RiscoWs/RapoarteRisco.php?wsdl';
 
-
         // create a log channel
         //$log = new Logger('name');
         //$log->pushHandler(new StreamHandler('/home/mihai/work/_proj/enso/storage/logs/your.log', Logger::WARNING));
@@ -97,11 +92,9 @@ class RiscoController extends Controller
 
         $this->processFin_ResRawData($result);
 
-
         $processedFinResult = FINResponse::format($result->getFinancial_Res()->getFIN_Res());
         $processedIidResult = IIDResponse::format($result->getFinancial_Res()->getIID_Res());
         $processedStsResult = STSResponse::format($result->getFinancial_Res()->getSTS_Res());
-
 
         return [
             'FIN_Res' => $processedFinResult,
@@ -110,14 +103,11 @@ class RiscoController extends Controller
         ];
     }
 
-
-
     public function index()
     {
         return view('laravel-enso/risco::risco.index',
             compact(''));
     }
-
 
     private function translateData($originalData)
     {
@@ -131,8 +121,6 @@ class RiscoController extends Controller
 
         return $translatedData;
     }
-
-
 
     private function getClassMaps()
     {
