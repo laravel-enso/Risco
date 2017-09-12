@@ -10,81 +10,78 @@
 
 @section('content')
 
-    <section class="content-header">
+    <page v-cloak>
 
-        @include('laravel-enso/menumanager::breadcrumbs')
-    </section>
+        <div class="col-md-12">
 
-    <section class="content" v-cloak >
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-primary" v-cloak>
+                        <div class="box-body" style="">
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box box-primary" v-cloak>
-                    <div class="box-body" style="">
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="input-group" :class="{'has-error' : inputHasError}">
-                                    <input type="text" class="form-control"
-                                           placeholder="CUI"
-                                           v-model="cui"
-                                           @keydown.enter= "fetch"
-                                           @keydown.esc="reset"
-                                           >
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-search"></i>
-                                    </span>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="input-group" :class="{'has-error' : inputHasError}">
+                                        <input type="text" class="form-control"
+                                               placeholder="CUI"
+                                               v-model="cui"
+                                               @keydown.enter= "fetch"
+                                               @keydown.esc="reset"
+                                        >
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-8">
+                                <div class="col-md-8">
 
-                                <button class="btn btn-primary"
-                                        @click="requestFIN"
-                                        v-show="cuiIsValid"
-                                        >
-                                    {{ __("FIN") }}
-                                </button>
+                                    <button class="btn btn-primary"
+                                            @click="requestFIN"
+                                            v-show="cuiIsValid"
+                                    >
+                                        {{ __("FIN") }}
+                                    </button>
 
-                                <button class="btn btn-primary"
-                                        @click="requestIID"
-                                        v-show="cuiIsValid"
-                                        >
-                                    {{ __("IID") }}
-                                </button>
+                                    <button class="btn btn-primary"
+                                            @click="requestIID"
+                                            v-show="cuiIsValid"
+                                    >
+                                        {{ __("IID") }}
+                                    </button>
 
-                                <button class="btn btn-primary"
-                                        @click="requestSTS"
-                                        v-show="cuiIsValid"
-                                        >
-                                    {{ __("STS") }}
-                                </button>
+                                    <button class="btn btn-primary"
+                                            @click="requestSTS"
+                                            v-show="cuiIsValid"
+                                    >
+                                        {{ __("STS") }}
+                                    </button>
+
+                                </div>
 
                             </div>
 
                         </div>
-
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
 
-            <fin-info :details="companyInfo.FIN_Res" v-if="companyInfo.FIN_Res">
-            </fin-info>
+                    <fin-info :details="companyInfo.FIN_Res" v-if="companyInfo.FIN_Res">
+                    </fin-info>
 
-            <iid-info :details="companyInfo.IID_Res" v-if="companyInfo.IID_Res">
-            </iid-info>
+                    <iid-info :details="companyInfo.IID_Res" v-if="companyInfo.IID_Res">
+                    </iid-info>
 
-            <sts-info :details="companyInfo.STS_Res" v-if="companyInfo.STS_Res">
-            </sts-info>
+                    <sts-info :details="companyInfo.STS_Res" v-if="companyInfo.STS_Res">
+                    </sts-info>
 
+                </div>
             </div>
         </div>
-
-    </section>
+    </page>
 
 @endsection
 
