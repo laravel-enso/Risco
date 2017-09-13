@@ -25,10 +25,9 @@ class STSResponse
 
     private static function processStatusData($riscoResponse)
     {
-
         $result = [];
 
-        if(!isset($riscoResponse->getRawData()->dateIdentificareFirma)) {
+        if (!isset($riscoResponse->getRawData()->dateIdentificareFirma)) {
             return $result;
         }
 

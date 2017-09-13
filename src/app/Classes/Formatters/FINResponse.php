@@ -33,7 +33,7 @@ class FINResponse
     {
         $result = [];
 
-        if(!isset($riscoResponse->getRawData()['CompanyData']['@attributes'])) {
+        if (!isset($riscoResponse->getRawData()['CompanyData']['@attributes'])) {
             return $result;
         }
 
@@ -58,7 +58,7 @@ class FINResponse
     {
         $result = [];
 
-        if(!isset($riscoResponse->getRawData()['CompanyData']['Caen']['@attributes'])) {
+        if (!isset($riscoResponse->getRawData()['CompanyData']['Caen']['@attributes'])) {
             return $result;
         }
 
@@ -75,7 +75,7 @@ class FINResponse
     {
         $result = [];
 
-        if(!isset($riscoResponse->getRawData()['CompanyData']['Financial'])) {
+        if (!isset($riscoResponse->getRawData()['CompanyData']['Financial'])) {
             return $result;
         }
 
