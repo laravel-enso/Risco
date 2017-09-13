@@ -15,18 +15,15 @@ use Phpro\SoapClient\Type\RequestInterface;
 
 class RiscoClient extends Client
 {
-
     public function getFinancialInfo(RequestInterface $request)
     {
 
         //try catch is necessary because of crappy response handling from Phpro / Guzzle
         try {
-
             return $this->call('getFinancialInfo', $request);
-
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
-            Log::debug(__CLASS__ . ' @ ' . __FUNCTION__ . ' @ ' . $e->getLine());
+            Log::debug(__CLASS__.' @ '.__FUNCTION__.' @ '.$e->getLine());
             Log::error($e->getTraceAsString());
 
             //throw our own exception for friendlier reporting
