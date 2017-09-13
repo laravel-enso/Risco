@@ -244,9 +244,15 @@
                 fetch: function (payload) {
 
                     let self = this;
-                    axios.get('/risco/query', { params: payload }).then((response) => {
-                        self.companyInfo = response.data;
-                    });
+                    axios.get('/risco/query', { params: payload }).then(
+                        (response) => {
+                            self.companyInfo = response.data;
+                        },
+                        (error) => {
+                            console.log(error.response);
+                            toastr[error.response.data.level](error.response.data.message);
+                        }
+                    );
                 },
                 reset: function () {
                     this.cui = null;
