@@ -17,7 +17,7 @@ class FINResponse
     public static function format($riscoFinancialResponse)
     {
         if (!$riscoFinancialResponse) {
-            return;
+            return [];
         }
 
         $result = new FinancialData();
@@ -31,9 +31,13 @@ class FINResponse
 
     private static function processCompanyData($riscoResponse)
     {
-        $companyData = $riscoResponse->getRawData()['CompanyData']['@attributes'];
-
         $result = [];
+
+        if(!isset($riscoResponse->getRawData()['CompanyData']['@attributes'])) {
+            return $result;
+        }
+
+        $companyData = $riscoResponse->getRawData()['CompanyData']['@attributes'];
 
         $result[] = new OrderableKV(__('Name'), $companyData['Name'], 1);
         $result[] = new OrderableKV(__('Commerce Registry Number'), $companyData['RegNo'], 2);
@@ -52,9 +56,13 @@ class FINResponse
 
     private static function processCaenData($riscoResponse)
     {
-        $caenData = $riscoResponse->getRawData()['CompanyData']['Caen']['@attributes'];
-
         $result = [];
+
+        if(!isset($riscoResponse->getRawData()['CompanyData']['Caen']['@attributes'])) {
+            return $result;
+        }
+
+        $caenData = $riscoResponse->getRawData()['CompanyData']['Caen']['@attributes'];
 
         $result[] = new OrderableKV(__('Caen Code'), $caenData['Caen'], 1);
         $result[] = new OrderableKV(__('Description'), $caenData['Descriere'], 2);
@@ -65,9 +73,13 @@ class FINResponse
 
     private static function processFinancialData($riscoResponse)
     {
-        $financialData = $riscoResponse->getRawData()['CompanyData']['Financial'];
-
         $result = [];
+
+        if(!isset($riscoResponse->getRawData()['CompanyData']['Financial'])) {
+            return $result;
+        }
+
+        $financialData = $riscoResponse->getRawData()['CompanyData']['Financial'];
 
         foreach ($financialData as $item) {
             $attributes = $item['@attributes'];

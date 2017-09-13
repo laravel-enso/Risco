@@ -15,7 +15,7 @@ class STSResponse
     public static function format($riscoStatusResponse)
     {
         if (!$riscoStatusResponse) {
-            return;
+            return [];
         }
 
         $result = self::processStatusData($riscoStatusResponse);
@@ -25,9 +25,14 @@ class STSResponse
 
     private static function processStatusData($riscoResponse)
     {
-        $companyData = $riscoResponse->getRawData()->dateIdentificareFirma;
 
         $result = [];
+
+        if(!isset($riscoResponse->getRawData()->dateIdentificareFirma)) {
+            return $result;
+        }
+
+        $companyData = $riscoResponse->getRawData()->dateIdentificareFirma;
 
         $result[] = new OrderableKV(__('Name'), $companyData->nume, 1);
         $result[] = new OrderableKV(__('CUI'), $companyData->codFiscal, 2);

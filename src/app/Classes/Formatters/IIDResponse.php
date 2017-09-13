@@ -15,7 +15,7 @@ class IIDResponse
     public static function format($riscoIdentificationResponse)
     {
         if (!$riscoIdentificationResponse) {
-            return;
+            return [];
         }
 
         $result = self::processIdentificationData($riscoIdentificationResponse);
@@ -25,9 +25,13 @@ class IIDResponse
 
     private static function processIdentificationData($riscoResponse)
     {
-        $companyData = $riscoResponse->getRawData()->dateIdentificareFirma;
-
         $result = [];
+
+        if (!isset($riscoResponse->getRawData()->dateIdentificareFirma)) {
+            return $result;
+        }
+
+        $companyData = $riscoResponse->getRawData()->dateIdentificareFirma;
 
         $result[] = new OrderableKV(__('Name'), $companyData->nume, 1);
         $result[] = new OrderableKV(__('Country'), $companyData->tara, 2);
