@@ -69,13 +69,22 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    <fin-info :details="companyInfo.FIN_Res" v-if="companyInfo.FIN_Res">
+                    <fin-info
+                            :i18n="i18n"
+                            :details="companyInfo.FIN_Res"
+                            v-if="companyInfo.FIN_Res">
                     </fin-info>
 
-                    <iid-info :details="companyInfo.IID_Res" v-if="companyInfo.IID_Res">
+                    <iid-info
+                            :i18n="i18n"
+                            :details="companyInfo.IID_Res"
+                            v-if="companyInfo.IID_Res">
                     </iid-info>
 
-                    <sts-info :details="companyInfo.STS_Res" v-if="companyInfo.STS_Res">
+                    <sts-info
+                            :i18n="i18n"
+                            :details="companyInfo.STS_Res"
+                            v-if="companyInfo.STS_Res">
                     </sts-info>
 
                 </div>
@@ -87,117 +96,6 @@
 
 @push('scripts')
 
-    <!-- templates -->
-    <script type="text/x-template" id="fin-template">
-
-        <div class="box box-primary" v-cloak>
-
-            <div class="box-header">
-                <div class="box-title">
-                    {{(__("Financial Data"))}}
-
-                </div>
-            </div>
-
-            <div class="box-body" style="">
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <address >
-
-                            <div v-for="item in details.companyData ">
-                                <strong><span v-html="item.key"></span></strong> <span v-html="item.value"></span><br>
-                            </div>
-
-                        </address>
-                    </div>
-
-                    <div class="col-md-6">
-                        <address >
-                            <div v-for="item in details.caenData ">
-                                <strong><span v-html="item.key"></span></strong> <span v-html="item.value"></span><br>
-                            </div>
-
-                        </address>
-                    </div>
-                </div>
-
-                <hr>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-
-                            <div class="col-md-3" v-for="item in details.financialData">
-                                <address >
-                                    {{ __("Year / Month ") }}: <strong> <span v-html="item.year + '/' + item.month"></span></strong><br>
-
-                                    <div v-for="subitem in item.details ">
-                                        <strong><span v-html="subitem.key"></span></strong> <span v-html="subitem.value"></span><br>
-                                    </div>
-
-                                </address>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </script>
-
-    <script type="text/x-template" id="iid-template">
-
-        <div class="box box-primary" v-cloak>
-
-            <div class="box-header">
-                <div class="box-title">
-                    {{(__("Identification Data"))}}
-
-                </div>
-            </div>
-
-            <div class="box-body" style="">
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <address >
-                            <div v-for="item in details">
-                                <strong><span v-html="item.key"></span></strong> <span v-html="item.value"></span><br>
-                            </div>
-                        </address>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </script>
-
-    <script type="text/x-template" id="sts-template">
-
-        <div class="box box-primary" v-cloak>
-
-            <div class="box-header">
-                <div class="box-title">
-                    {{(__("Status Data"))}}
-
-                </div>
-            </div>
-
-            <div class="box-body" style="">
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <address >
-                            <div v-for="item in details">
-                                <strong><span v-html="item.key"></span></strong> <span v-html="item.value"></span><br>
-                            </div>
-                        </address>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </script>
-
     <script type="text/javascript">
         let vm = new Vue({
             el: "#app",
@@ -206,7 +104,11 @@
                     query: null,
                     cui: 22197648,
                     inputHasError: false,
-                    companyInfo: {}
+                    companyInfo: {},
+                    i18n: {},
+                    translationKeys: [
+                        "Status Data","Identification Data","Financial Data","Year / Month"
+                    ]
                 }
             },
             computed: {
@@ -256,50 +158,21 @@
                 },
                 reset: function () {
                     this.cui = null;
-                }
-            },
-            created: function() {
-            },
-            components: {
-
-                finInfo: {
-                    template: '#fin-template',
-                    props: {
-                        details: {
-                            type: Object,
-                            default: function () {
-                                return {
-                                    a: 0
-                                };
-                            }
-                        }
-                    },
-                    computed: {
-
-                    }
                 },
-                iidInfo: {
-                    template: '#iid-template',
-                    props: {
-                        details: {
-                            type: Array,
-                            default: function () {
-                                return [];
-                            }
-                        }
-                    }
+                getTranslations: function () {
+                    let self = this;
+                    let payload = {
+                        params: this.translationKeys
+                    };
+                    axios.get('/home/getTranslations', payload).then(function (response) {
+
+                        self.i18n = response.data;
+                    });
                 },
-                stsInfo: {
-                    template: '#sts-template',
-                    props: {
-                        details: {
-                            type: Array,
-                            default: function () {
-                                return [];
-                            }
-                        }
-                    }
-                }
+
+            },
+            mounted: function() {
+                this.getTranslations();
             }
         });
     </script>
