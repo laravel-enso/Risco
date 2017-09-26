@@ -250,7 +250,7 @@
                         },
                         (error) => {
                             console.log(error.response);
-                            toastr[error.response.data.level](error.response.data.message);
+                            toastr['error'](error.response.data.message);
                         }
                     );
                 },
