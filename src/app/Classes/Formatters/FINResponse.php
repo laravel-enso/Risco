@@ -82,9 +82,7 @@ class FINResponse
         $financialData = $riscoResponse->getRawData()['CompanyData']['Financial'];
 
         foreach ($financialData as $item) {
-
-
-            if(!isset($item['@attributes'])) {
+            if (!isset($item['@attributes'])) {
                 continue;
             }
 
