@@ -82,6 +82,12 @@ class FINResponse
         $financialData = $riscoResponse->getRawData()['CompanyData']['Financial'];
 
         foreach ($financialData as $item) {
+
+
+            if(!isset($item['@attributes'])) {
+                continue;
+            }
+
             $attributes = $item['@attributes'];
 
             $tmp = new FiscalDetails($attributes['Luna'], $attributes['An']);
