@@ -11,7 +11,6 @@ use LaravelEnso\Risco\app\Classes\Formatters\IIDResponse;
 use LaravelEnso\Risco\app\Classes\Formatters\STSResponse;
 use LaravelEnso\Risco\app\Classes\Generated\Errors;
 use LaravelEnso\Risco\app\Classes\RiscoClient;
-use LaravelEnso\Risco\app\Enums\DataTypesEnum;
 use LaravelEnso\Risco\app\Http\Requests\ValidateRiscoRequest;
 use Phpro\SoapClient\ClientBuilder;
 use Phpro\SoapClient\ClientFactory;
@@ -166,6 +165,5 @@ class RiscoController extends Controller
         if ($error->getErrorDetails()) {
             throw new EnsoException($error->getErrorDetails());
         }
-
     }
 }
