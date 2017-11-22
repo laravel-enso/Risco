@@ -5,9 +5,11 @@ namespace LaravelEnso\Risco\app\Http\Controllers;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use LaravelEnso\Core\app\Exceptions\EnsoException;
 use LaravelEnso\Risco\app\Classes\Formatters\FINResponse;
 use LaravelEnso\Risco\app\Classes\Formatters\IIDResponse;
 use LaravelEnso\Risco\app\Classes\Formatters\STSResponse;
+use LaravelEnso\Risco\app\Classes\Generated\Errors;
 use LaravelEnso\Risco\app\Classes\RiscoClient;
 use LaravelEnso\Risco\app\Enums\DataTypesEnum;
 use LaravelEnso\Risco\app\Http\Requests\ValidateRiscoRequest;
@@ -90,6 +92,8 @@ class RiscoController extends Controller
         $response = $client->getFinancialInfo($request);
         $result = $response->getResult();
 
+        $this->checkForErrors($result);
+
         $this->processFin_ResRawData($result);
 
         $processedFinResult = FINResponse::format($result->getFinancial_Res()->getFIN_Res());
@@ -107,19 +111,6 @@ class RiscoController extends Controller
     {
         return view('laravel-enso/risco::risco.index',
             compact(''));
-    }
-
-    private function translateData($originalData)
-    {
-        $types = (new DataTypesEnum())->getData();
-        $translatedData = json_decode(json_encode($originalData), true);
-
-        for ($i = 0; $i < count($translatedData); $i++) {
-            $key = $translatedData[$i]['key'];
-            $translatedData[$i]['key'] = $types[$key];
-        }
-
-        return $translatedData;
     }
 
     private function getClassMaps()
@@ -166,5 +157,15 @@ class RiscoController extends Controller
         $array = json_decode($json, true);
 
         $result->getFinancial_Res()->getFIN_Res()->setRawData($array);
+    }
+
+    private function checkForErrors($result)
+    {
+        /* @var Errors */
+        $error = $result->getError();
+        if ($error->getErrorDetails()) {
+            throw new EnsoException($error->getErrorDetails());
+        }
+
     }
 }
