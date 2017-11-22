@@ -161,7 +161,7 @@ class RiscoController extends Controller
     private function checkForErrors($result)
     {
         /* @var Errors */
-        $error = $result->getError();
+        $error = $result->getErrors();
         if ($error->getErrorDetails()) {
             throw new EnsoException($error->getErrorDetails());
         }
