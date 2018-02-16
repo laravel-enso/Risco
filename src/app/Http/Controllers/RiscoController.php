@@ -83,8 +83,8 @@ class RiscoController extends Controller
         $clientBuilder->withClassMaps($this->getClassMaps());
         //$clientBuilder->addTypeConverter(new DateTimeTypeConverter());
 
-        $guzzleClient = new Client();
-        $clientBuilder->withHandler(GuzzleHandle::createForClient($guzzleClient));
+        //$guzzleClient = new Client();
+        //$clientBuilder->withHandler(GuzzleHandle::createForClient($guzzleClient));
 
         $client = $clientBuilder->build();
 
